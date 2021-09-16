@@ -84,14 +84,15 @@
                         let is_open = list[i]['is_open']
                         if (is_open) {
                             console.log(date)
-                            let template = `<div id="posting">
-                        <p>${date} ${time} ${place}에서 ${title} 같이 봐요!</p>
-                        ${contents}
-                        <a href="#comment-box" class="btn" data-toggle="collapse">
-                            <i style="margin-bottom: 10px" class="far fa-plus-square"></i>
-                        </a>
+
+                            let template = `
+                    <li id="posting" class="list-group-item d-flex justify-content-between align-items-start">
+                     <div class="ms-2 me-auto">
+                      <div class="fw-bold">${date}</div>
+                      ${time}
                     </div>
-                    `
+                    <span class="badge bg-primary rounded-pill">14</span>
+                    </li>`
                             $('#posting-box').append(template)
                         } else {
                         }
@@ -208,15 +209,17 @@
                                    aria-describedby="inputGroup-sizing-default">
                         </div>
                         <div class="mb-3">
-                            <textarea class="form-control" id="time" rows="3" placeholder="영화를 추천해주세요.
-                            자세한 추천 이유는 다른 분께 도움이 됩니다. 오해의 소지가 있는 내용은 비공개 조치가될 수 있습니다."></textarea>
+                            <textarea id="time" class="form-control" rows="6"
+                                      placeholder="영화를 추천해주세요.&#13;&#10;자세한 추천 이유는 다른 분께 도움이 됩니다.&#13;&#10;오해의 소지가 있는 내용은 비공개 조치가될 수 있습니다."></textarea>
                         </div>
-                        <div class="input-group mb-3">
-                            <input id="contents" type="text" class="form-control" rows="3"
-                                   placeholder="영화를 추천해주세요. 자세한 추천 이유는 다른 분께 도움이 됩니다. 오해의 소지가 있는 내용은 비공개 조치가될 수 있습니다."
-                                   aria-label="Sizing example input"
-                                   aria-describedby="inputGroup-sizing-default">
-                        </div>
+                        <!--                        <div class="input-group mb-3">-->
+                        <!--                            <input id="contents" type="text" class="form-control" rows="3"-->
+                        <!--                                   placeholder="영화를 추천해주세요.-->
+                        <!--                                   자세한 추천 이유는 다른 분께 도움이 됩니다.-->
+                        <!--                                   오해의 소지가 있는 내용은 비공개 조치가될 수 있습니다."-->
+                        <!--                                   aria-label="Sizing example input"-->
+                        <!--                                   aria-describedby="inputGroup-sizing-default">-->
+                        <!--                        </div>-->
 
 
                     </div>
@@ -231,14 +234,25 @@
         <!--        *******************************-->
         <!--        *******************************-->
         <div class="col-lg-6 mx-auto">
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <!--            게시글 형식-->
-                <div id="posting-box" class="container">
 
-                </div>
+            <!--            게시글 형식-->
 
-            </div>
+            <ol id="posting-box" class="list-group list-group-numbered">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Subheading</div>
+                        Cras justo odio
+                    </div>
+                    <span class="badge bg-primary rounded-pill">14</span>
+                </li>
+
+            </ol>
+
+
         </div>
+
+    </div>
+    </div>
 
     </div>
 
