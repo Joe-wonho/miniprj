@@ -72,16 +72,18 @@ def sign_up():
     region_receive = request.form['region_give']
     gender_receive = request.form['gender_give']
     doc = {
-        "user_id": username_receive,
+        "username": username_receive,
         "password": password_hash,
         "nickname": nickname_receive,
         "age": age_receive,
         "region": region_receive,
         "gender": gender_receive,
         "profile_pic": "",
-        "profile_pic_real": "profile_pics/profile_placeholder.png"
+        "profile_pic_real": "profile_pics/profile_placeholder.png",
+        "about":"소개를 작성해보세요!"
     }
     db.users.insert_one(doc)
+    print(doc)
     return jsonify({'result': 'success'})
 
 
@@ -117,6 +119,7 @@ def detail(title):
 def view_posting():
     title = request.args.get('title')
     posting_info_list = list(db.posting.find({'title': title}, {'_id': False}))
+    print(posting_info_list)
     return jsonify({'posting_list': posting_info_list})
 
 @app.route('/posting', methods=['POST'])
@@ -130,7 +133,7 @@ def posting():
     title_receive = request.form['title_give']
     doc = {
         "title": title_receive,
-        "user_id": user_info["username"],
+        "username": user_info["username"],
         "current": current_time,
         "contents": contents_receive,
         "is_open": 'True'
@@ -149,8 +152,10 @@ def get_profile(username):
 
 @app.route('/get_post', methods=['GET'])
 def get_post():
-    user_name = request.args.get("user_name")
-    my_post_list = list(db.posting.find({'user_id': user_name}, {'_id': False}))
+    title = request.args.get("title")
+    print(title)
+    my_post_list = list(db.posting.find({'title': title}, {'_id': False}))
+    print(my_post_list)
     return jsonify({'my_post_list': my_post_list})
 
 
@@ -163,7 +168,7 @@ def save_img():
     about_receive = request.form["about_give"]
 
     new_doc = {
-        "profile_info": about_receive
+        "profile_info": about_receive,
     }
     if 'file_give' in request.files:
         file = request.files["file_give"]

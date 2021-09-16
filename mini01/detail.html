@@ -55,7 +55,7 @@
     <script>
 
         let user_name = "{{user_info.username}}"
-
+        console.log(user_name)
 
         $(function () {
             get_posting_info()
@@ -68,10 +68,10 @@
             console.log(title)
             $.ajax({
                 type: "GET",
-                url: `/detail?title=${title}`,
+                url: `/get_post?title=${title}`,
                 data: {},
                 success: function (response) {
-                    let list = response['posting_list']
+                    let list = response['my_post_list']
                     console.log(list)
                     for (let i = 0; i < list.length; i++) {
                         let contents = list[i]['contents']
