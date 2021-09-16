@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 
 <head>
@@ -25,20 +25,6 @@
             crossorigin="anonymous"></script>
 
     <style>
-        a:link {
-            color: black;
-            text-decoration: none;
-        }
-
-        a:visited {
-            color: black;
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: black;
-            text-decoration: none;
-        }
 
         .write-btn {
             position: relative;
@@ -56,57 +42,18 @@
 
         let user_name = "{{user_info.username}}"
 
-
-        $(function () {
-            get_posting_info()
-            console.log(user_name)
-
+        $(document).ready(function () {
+            // console.log(title)
+             console.log(user_name)
         })
-
-        function get_posting_info() {
-            let title = "{{ list.title }}"
-            console.log(title)
-            $.ajax({
-                type: "GET",
-                url: `/detail?title=${title}`,
-                data: {},
-                success: function (response) {
-                    let list = response['posting_list']
-                    console.log(list)
-                    for (let i = 0; i < list.length; i++) {
-                        let title = list[i]['title']
-                        let comment = list[i]['comment']
-                        let userid = list[i]['userid']
-                        let contents = list[i]['contents']
-                        let date = list[i]['date']
-                        let time = list[i]['time']
-                        let place = list[i]['place']
-                        let is_open = list[i]['is_open']
-                        if (is_open) {
-                            console.log(date)
-                            let template = `<div id="posting">
-                        <p>${date} ${time} ${place}에서 ${title} 같이 봐요!</p>
-                        ${contents}
-                        <a href="#comment-box" class="btn" data-toggle="collapse">
-                            <i style="margin-bottom: 10px" class="far fa-plus-square"></i>
-                        </a>
-                    </div>
-                    `
-                            $('#posting-box').append(template)
-                        } else {
-                        }
-                    }
-                }
-            })
-        }
 
         function post_board() {
             let title = "{{list.title}}"
             let date = $("#date").val()
             let time = $("#time").val()
             let place = $("#place").val()
-            let contents = $("#contents").val()
-            console.log(title, date, time, place, contents)
+            let content = $("#content").val()
+            console.log(title, date, time, place, content)
             $.ajax({
                 type: "POST",
                 url: "/posting",
@@ -115,7 +62,7 @@
                     date_give: date,
                     time_give: time,
                     place_give: place,
-                    contents_give: contents,
+                    content_give: content,
                 },
                 success: function (response) {
                     alert("성공!")
@@ -125,100 +72,119 @@
 
         }
 
-        function go_mine() {
-            location.href = `/profile/${user_name}`
-
-        }
 
     </script>
+
 </head>
+
 <body>
+
 <header class="p-3 mb-3 border-bottom bg-secondary">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
                 <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    {#
                     <use xlink:href="#bootstrap"></use>
+                    #}
                 </svg>
             </a>
             <!--제목넣는곳-->
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <p style="font-size: 2em"><a href="http://192.168.10.103:5000/"><strong>같이보실?</strong></a></p>
+                <p style="font-size: 2em"><strong>같이보실?</strong></p>
             </ul>
             <!--검색창 -->
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
                 <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
             </form>
-            <!--마이페이지가는 버튼   -->
-            <!--            여기가문제같다******************************************************-->
+            <!--마이페이지가는 버튼-->
             <div class="text-end">
-                <a onclick="go_mine()" class="d-block link-dark text-decoration-none" id="mine"
+                <a href="/profile/${user_name}" class="d-block link-dark text-decoration-none" id="mine"
                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <!--            여기가문제같다******************************************************-->
                     <img src="https://image-notepet.akamaized.net/resize/620x-/seimage/20191114%2F6a4c967c5b14197dd5d2c47424ae8e82.jpg"
                          alt="mdo" width="50" height="50" class="rounded-circle">
                 </a>
+
             </div>
         </div>
     </div>
 </header>
+
 <main role="main">
+
+    <!--    *****************테스트공간  다 하면 삭제하기-->
+
+    <h1 style="display: inline;">{{ list.title }}</h1>
+
+
     <!--    *****************테스트공간-->
-    <h1 style="display: inline;"></h1>
-    <!--    *****************테스트공간-->
+
+
     <div class="b-example-divider"></div>
+
     <!--    상세페이지의 영화와 설명 노출되는 공간-->
     <div class="container col-xxl-8 px-4 py-5">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
             <div class="col-10 col-sm-8 col-lg-6">
-                <!--                이미지 크기 줄여야할듯요-->
-                <img src="{{ list.img_url }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700"
+                <img src="../static/default.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700"
                      height="500" loading="lazy">
             </div>
+
             <div class="col-lg-6">
-                <h2 class="display-5 fw-bold lh-1 mb-3">{{ list.title }}</h2>
-                <h5 style="color: darkgrey"> &nbsp;&nbsp;장르 : {% for word in list.genre %}{{ word }}&nbsp;{% endfor
-                    %}</h5>
-                <h5 style="color: darkgrey"> &nbsp;&nbsp;평점 : {{ list.grade }} </h5>
+                <h2 id="title" class="display-5 fw-bold lh-1 mb-3">{{ list.title }} </h2>
+                <h5 style="color: darkgrey"> &nbsp;&nbsp;장르 </h5>
+                <h5 style="color: darkgrey"> &nbsp;&nbsp;평점 : 4 </h5>
+                <p class="lead">Qufrns.</p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 </div>
             </div>
         </div>
     </div>
+
     <!--    소통공간-->
     <div class="px-4 py-5 my-5 text-center">
         <i class="fas fa-comments fa-3x"></i>
-        <h3 class="display-5 fw-bold posit-cmt">영화 추천 공간<span>
+        <h3 class="display-5 fw-bold posit-cmt">소통공간(가제)<span>
         <button type="button" class="btn btn-outline-secondary btn-lg write-btn "
                 data-toggle="modal" data-target="#posting_Modal">글쓰기
         </button></span></h3>
+
+
         <!-- 글쓰기 Modal -->
         <div class="modal fade" id="posting_Modal" tabindex="-1" aria-labelledby="postingModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
 
                     <div class="modal-header" style="text-align: center">
-                        <h5 class="modal-title" id="postingModalLabel">리뷰 작성</h5>
+                        <h5 class="modal-title" id="postingModalLabel">게시글 쓰기</h5>
                         <button type="button" class="btn-close" data-dismiss="modal"></button>
                     </div>
+
                     <div class="modal-body">
                         <div class="input-group mb-3">
-                            <input id="date" type="text" class="form-control" placeholder="제목을 입력해주세요."
+                            <span class="input-group-text">날짜</span>
+                            <input id="date" type="text" class="form-control" placeholder="X월 X일로 작성해주세요!"
                                    aria-label="Sizing example input"
                                    aria-describedby="inputGroup-sizing-default">
-                        </div>
-                        <div class="mb-3">
-                            <textarea class="form-control" id="time" rows="3" placeholder="영화를 추천해주세요.
-                            자세한 추천 이유는 다른 분께 도움이 됩니다. 오해의 소지가 있는 내용은 비공개 조치가될 수 있습니다."></textarea>
                         </div>
                         <div class="input-group mb-3">
-                            <input id="contents" type="text" class="form-control" rows="3"
-                                   placeholder="영화를 추천해주세요. 자세한 추천 이유는 다른 분께 도움이 됩니다. 오해의 소지가 있는 내용은 비공개 조치가될 수 있습니다."
+                            <span class="input-group-text">시간</span>
+                            <input id="time" type="text" class="form-control" placeholder="몇시 영화인지 써주세요!"
                                    aria-label="Sizing example input"
                                    aria-describedby="inputGroup-sizing-default">
                         </div>
-
-
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">장소</span>
+                            <input id="place" type="text" class="form-control" placeholder="원하는 상영관의 이름을 적어주세요!"
+                                   aria-label="Sizing example input"
+                                   aria-describedby="inputGroup-sizing-default">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">전하고 싶은말!</span>
+                            <input id="content" type="text" class="form-control" placeholder="함께 하고 싶은 분께 전하고 싶은 말!!"
+                                   aria-label="Sizing example input"
+                                   aria-describedby="inputGroup-sizing-default">
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -230,10 +196,56 @@
         </div>
         <!--        *******************************-->
         <!--        *******************************-->
+
+
         <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">영화를 보고싶은 날짜, 시간, 장소를 입력하세요!</p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                 <!--            게시글 형식-->
-                <div id="posting-box" class="container">
+                <div class="container">
+
+                    <div>
+                        관람희망 날짜 시간 장소
+                        <a href="#demo00" class="btn" data-toggle="collapse">
+                            <i style="margin-bottom: 10px" class="far fa-plus-square"></i>
+                        </a>
+                    </div>
+                    <div id="demo00" class="collapse">
+
+                        <div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">댓글단 시간</span>
+                                <input id="comment_save" type="text" class="form-control">
+                                <button class="btn btn-outline-secondary" type="button">댓글 저장</button>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">댓글단 시간</span>
+                                <input type="text" class="form-control">
+                                <button class="btn btn-outline-secondary" type="button">Button</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div>관람희망 날짜 시간 장소
+                        <a href="#demo01" class="btn" data-toggle="collapse"><i class="far fa-plus-square"> </i></a>
+                        <div id="demo01" class="collapse">
+                            <div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">댓글단 시간</span>
+                                    <input type="text" class="form-control">
+                                    <button class="btn btn-outline-secondary" type="button">Button</button>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">댓글단 시간</span>
+                                    <input type="text" class="form-control">
+                                    <button class="btn btn-outline-secondary" type="button">Button</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -243,5 +255,6 @@
     </div>
 
 </main>
+
 </body>
 </html>

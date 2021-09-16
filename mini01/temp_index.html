@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Title</title>
+
+    <script src="https://kit.fontawesome.com/3ccd95ba74.js" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS 버전 바뀌면 이 코드 수시로 바꿔줘야 함-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <style>
+        .wrap {
+            text-align: center;
+        }
+
+        .one {
+
+
+            background-color: rgb(252, 233, 232);
+            width: auto;
+            height: 150px;
+        }
+
+        .two {
+            background-color: aliceblue;
+            width: auto;
+            height: 450px;
+
+        }
+
+        .tree {
+
+            height: 100px;
+            width: auto;
+            border-bottom: solid 3px;
+            border-top: solid 3px;
+
+        }
+
+        .four {
+            alignment: center;
+            background-color: blue;
+            height: auto;
+            width: auto;
+
+        }
+
+        .btn-light {
+
+
+            margin: 0px 35px 0px 35px;
+        }
+
+        .search {
+
+            align-content: center;
+            text-align: center;
+        }
+
+        .search_window{
+            text-align: center;
+            position:relative;
+			width:800px;
+			margin: 0 auto;
+        }
+        .search_btn {
+			position:absolute;
+			top:0;
+			right:0;
+		}
+		.search_btn i {
+			padding:17px 30px;
+		}
+
+
+
+
+        .new_card {
+            background-color: blue;
+            width: 250px;
+            height: 300px;
+            margin: 20px 10px 20px 10px;
+            display: inline-block;
+        }
+
+        .card-img-top {
+
+            background-position: center;
+            background-size: cover;
+
+        }
+
+        .right-box {
+            position: absolute;
+            top: 0;
+            right: 0;
+            /*background-image: url("");*/
+        }
+
+
+    </style>
+
+    <script>
+        // function search_btn(){
+        //
+        //     let search_result =
+        //
+        //
+        //     alert("Search")
+        // }
+        //
+        // function profile(){
+        //
+        //     alert("Profile")
+        // }
+    </script>
+
+</head>
+
+<body>
+
+
+<div class="one">
+    <div style="text-align: center; font-size: 35px; ">같이보실?<span class='right-box' type="button" onclick="profile()">프로필</span></div>
+        <div class="search_window">
+            <span class="search">
+                <input class="search__input" type="text" placeholder="검색" style="border-radius: 50px; width: 800px; height: 50px">
+
+            </span>
+            <span class="search_btn">
+             <i  type="button"  onclick="search_btn()" class="fas fa-search"></i>
+            </span>
+        </div>
+</div>
+
+
+<div class="two">
+    <div class="mov" style="margin:10px 30px 10px 30px">
+        <div class="new_card">
+            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
+                 class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">영화제목 movie_title.</p>
+            </div>
+        </div>
+        <div class="new_card">
+            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
+                 class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">영화제목 movie_title.</p>
+            </div>
+        </div>
+        <div class="new_card">
+            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
+                 class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">영화제목 movie_title.</p>
+            </div>
+        </div>
+        <div class="new_card">
+            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
+                 class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">영화제목 movie_title.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="tree">
+    <button type="button" class="btn btn-light">장르</button>
+    <button type="button" class="btn btn-light">장르</button>
+    <button type="button" class="btn btn-light">장르</button>
+    <button type="button" class="btn btn-light">장르</button>
+    <button type="button" class="btn btn-light">장르</button>
+    <button type="button" class="btn btn-light">장르</button>
+
+</div>
+<div class="four">
+    <div id="card">
+        card
+        <!--           - 영화 제목 id = movie-title-->
+        <!--           - 영화 평점 id = movie-grade-->
+        <!--           - 영화 장르 id = movie-genre-->
+        <!--           - 영화 개봉일 id = movie-open-day-->
+
+    </div>
+
+
+</div>
+
+<div id= "card-list" class = "card-wrap">
+
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5D1-LAPw1QTaA1hiANwq6-290hLnfLrvQwg&usqp=CAU" class="img-fluid rounded-start" alt="영화">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title" id="movie-title">영화제목 ${movie-title}</h5>
+        <p class="card-text" id="movie-dir">영화감독 ${movie-dir}</p>
+          <p class="card-text" id = "movie-grade">영화평점 ${movie-grade}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+</body>
+</html>

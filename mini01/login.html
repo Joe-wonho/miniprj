@@ -90,6 +90,7 @@
             $("#help-id").toggleClass("is-hidden")
             $("#help-password").toggleClass("is-hidden")
             $("#help-password2").toggleClass("is-hidden")
+            $("#help-nickname").toggleClass("is-hidden")
             $("#help-age").toggleClass("is-hidden")
             $("#help-region").toggleClass("is-hidden")
             $("#help-gender").toggleClass("is-hidden")
@@ -147,10 +148,11 @@
             let username = $("#input-username").val()
             let password = $("#input-password").val()
             let password2 = $("#input-password2").val()
+            let nickname = $("#input-nickname").val()
             let age = $("#input-age").val()
             let region = $("#input-region").val()
             let gender = $('input[name=gender]:checked').val()
-            console.log(username, password, age, region, gender)
+            console.log(username, password, nickname, age, region, gender)
 
 
             if ($("#help-id").hasClass("is-danger")) {
@@ -189,6 +191,7 @@
                 data: {
                     username_give: username,
                     password_give: password,
+                    nickname_give: nickname,
                     age_give: age,
                     gender_give: gender,
                     region_give: region
@@ -313,6 +316,12 @@
                                 </div>
                                 <p id="help-password2" class="help is-hidden" style="padding-bottom: 10px">비밀번호를 다시 한 번
                                     입력해주세요.</p>
+                                <div class="control has-icons-left" style="width:100%">
+                                    <input id="input-nickname" class="input" type="text"
+                                           placeholder="이름">
+                                    <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
+                                </div>
+                                <p id="help-nickname" class="help is-hidden" style="padding-bottom: 10px">이름을 입력해주세요</p>
 
                                 <div class="control has-icons-left" style="width:100%">
                                     <input id="input-age" class="input" type="text"

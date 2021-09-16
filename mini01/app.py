@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 import jwt
 import datetime
 import hashlib
@@ -13,7 +14,7 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 SECRET_KEY = 'SPARTA'
 client = MongoClient('localhost', 27017)
 # client = MongoClient('mongodb://test:test@3.34.177.185', 27017)
-db = client.mini01
+db = client.dbsparta
 
 
 @app.route('/')
@@ -22,6 +23,9 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"username": payload["id"]})
+
+        print(user_info)
+
         return render_template('index.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -33,20 +37,6 @@ def home():
 def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
-
-
-@app.route('/user/<username>')
-def user(username):
-    # 각 사용자의 프로필과 글을 모아볼 수 있는 공간
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        status = (username == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
-
-        user_info = db.users.find_one({"username": username}, {"_id": False})
-        return render_template('user.html', user_info=user_info, status=status)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
 
 
 @app.route('/sign_in', methods=['POST'])
@@ -77,12 +67,14 @@ def sign_up():
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+    nickname_receive = request.form['nickname_give']
     age_receive = request.form['age_give']
     region_receive = request.form['region_give']
     gender_receive = request.form['gender_give']
     doc = {
         "username": username_receive,
         "password": password_hash,
+        "nickname": nickname_receive,
         "age": age_receive,
         "region": region_receive,
         "gender": gender_receive,
@@ -99,49 +91,103 @@ def check_dup():
     return jsonify({'result': 'success', 'exists': exists})
 
 
-@app.route('/update_profile', methods=['POST'])
-def save_img():
+@app.route('/genre', methods=['GET'])
+def view_movie():
+    genre = request.args.get('givegenre')
+    # mongoDB의 id값은 자료형이 특이해서(ObjectId) rendertamplats 안에 넣으면 오류가 나고 다루기도 어렵습니당
+    movie_list = list(db.movie_info.find({'genre': genre}, {'_id': False}))
+    return jsonify({'movieList': movie_list})
+
+
+@app.route('/detail/<title>')
+def detail(title):
+    # 수정시작-------------------------------
     token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 프로필 업데이트
-        return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    user_info = db.users.find_one({"username": payload["id"]})
+    print(user_info)
+    # 수정끝---------------------------------
+    title_info = db.movie_info.find_one({"title": title}, {"_id": False})
+    print(title_info)
+    return render_template("detail.html", list=title_info, user_info=user_info)
+
+
+@app.route('/detail', methods=['GET'])
+def view_posting():
+    title = request.args.get('title')
+    posting_info_list = list(db.posting.find({'title': title}, {'_id': False}))
+    return jsonify({'posting_list': posting_info_list})
 
 
 @app.route('/posting', methods=['POST'])
 def posting():
     token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 포스팅하기
-        return jsonify({"result": "success", 'msg': '포스팅 성공'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    user_info = db.users.find_one({"username": payload["id"]})
+    today = datetime.now()
+    current_time = today.strftime('%Y-%m-%d-%H-%M-%S')
+    print(user_info["username"])
+    print(current_time)
+    title_receive = request.form['title_give']
+    date_receive = request.form['date_give']
+    time_receive = request.form['time_give']
+    place_receive = request.form['place_give']
+    contents_receive = request.form['contents_give']
+    doc = {
+        "title": title_receive,
+        "user_obj_id": user_info["username"],
+        "date": date_receive,
+        "time": time_receive,
+        "place": place_receive,
+        "current": current_time,
+        "contents": contents_receive,
+        "is_open": 'True'
+    }
+    db.posting.insert_one(doc)
+    return jsonify({"result": "success", 'msg': '저장 완료!'})
 
-#안건드려도 됩니다!
-@app.route("/get_posts", methods=['GET'])
-def get_posts():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 포스팅 목록 받아오기
-        return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다."})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+
+@app.route('/profile/<username>')
+def get_profile(username):
+    # token_receive = request.cookies.get('mytoken')
+    # payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    user_info = db.users.find_one({"username": username}, {"_id": False})
+    print(user_info)
+    return render_template("profile.html", user_info=user_info)
+
+#
+# @app.route('/profile', methods=['GET'])
+# def view_posting():
+#     title = request.args.get('title')
+#     posting_info_list = list(db.posting.find({'title': title}, {'_id': False}))
+#     return jsonify({'posting_list': posting_info_list})
 
 
-#안건드려도 됩니다!
-@app.route('/update_like', methods=['POST'])
-def update_like():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 좋아요 수 변경
-        return jsonify({"result": "success", 'msg': 'updated'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+# @app.route('/update_profile', methods=['POST'])
+# def update_profile():
+#     token_receive = request.cookies.get('mytoken')
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         username = payload["id"]
+#         name_receive = request.form["name_give"]
+#         about_receive = request.form["about_give"]
+#         new_doc = {
+#             "profile_name": name_receive,
+#             "profile_info": about_receive
+#         }
+#         if 'file_give' in request.files:
+#             file = request.files["file_give"]
+#         filename = secure_filename(file.filename)
+#         extension = filename.split(".")[-1]
+#         file_path = f"profile_pics/{username}.{extension}"
+#         file.save("./static/" + file_path)
+#         new_doc["profile_pic"] = filename
+#         new_doc["profile_pic_real"] = file_path
+#         db.users.update_one({'username': payload['id']}, {'$set': new_doc})
+#         return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
+#
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return redirect(url_for("home"))
 
 
 if __name__ == '__main__':

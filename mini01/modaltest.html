@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Title</title>
+
+    <script src="https://kit.fontawesome.com/3ccd95ba74.js" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS 버전 바뀌면 이 코드 수시로 바꿔줘야 함-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <style>
+
+        .write-btn {
+            position: relative;
+            left: 70px;
+        }
+
+        .posit-cmt {
+            position: relative;
+            left: 50px;
+        }
+
+    </style>
+
+    <script>
+
+    </script>
+
+</head>
+
+<body>
+
+<header class="p-3 mb-3 border-bottom bg-secondary">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+            </a>
+            <!--제목넣는곳-->
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <p style="font-size: 2em"><strong>같이보실?</strong></p>
+            </ul>
+            <!--검색창 -->
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            </form>
+            <!--마이페이지가는 버튼-->
+            <div class="text-end">
+                <a href="#" class="d-block link-dark text-decoration-none" id="mine"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://image-notepet.akamaized.net/resize/620x-/seimage/20191114%2F6a4c967c5b14197dd5d2c47424ae8e82.jpg"
+                         alt="mdo" width="50" height="50" class="rounded-circle">
+                </a>
+
+            </div>
+        </div>
+    </div>
+</header>
+
+<main role="main">
+    <div class="b-example-divider"></div>
+
+    <div class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+            <div class="col-10 col-sm-8 col-lg-6">
+                <img src="../static/default.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700"
+                     height="500" loading="lazy">
+            </div>
+
+            <div class="col-lg-6">
+                <h2 class="display-5 fw-bold lh-1 mb-3">영화 제목 </h2>
+                <h5 style="color: darkgrey"> &nbsp;&nbsp;장르 </h5>
+                <h5 style="color: darkgrey"> &nbsp;&nbsp;평점 : 4 </h5>
+                <p class="lead">Qufrns.</p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-4 py-5 my-5 text-center">
+        <i class="fas fa-comments fa-3x"></i>
+        <h3 class="display-5 fw-bold posit-cmt">소통공간(가제)<span>
+        <button type="button" class="btn btn-outline-secondary btn-lg write-btn">글쓰기
+        </button></span></h3>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Launch demo modal
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">영화를 보고싶은 날짜, 시간, 장소를 입력하세요!</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <!--            게시글 형식-->
+                <div class="container">
+
+                    <div>
+                        관람희망 날짜 시간 장소
+                        <a href="#demo00" class="btn" data-toggle="collapse">
+                            <i style="margin-bottom: 10px" class="far fa-plus-square"></i>
+                        </a>
+                    </div>
+                    <div id="demo00" class="collapse">
+
+                        <div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">댓글단 시간</span>
+                                <input type="text" class="form-control">
+                                <button class="btn btn-outline-secondary" type="button">Button</button>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">댓글단 시간</span>
+                                <input type="text" class="form-control">
+                                <button class="btn btn-outline-secondary" type="button">Button</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div>관람희망 날짜 시간 장소
+                        <a href="#demo01" class="btn" data-toggle="collapse"><i class="far fa-plus-square"> </i></a>
+                        <div id="demo01" class="collapse">
+                            <div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">댓글단 시간</span>
+                                    <input type="text" class="form-control">
+                                    <button class="btn btn-outline-secondary" type="button">Button</button>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">댓글단 시간</span>
+                                    <input type="text" class="form-control">
+                                    <button class="btn btn-outline-secondary" type="button">Button</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

@@ -20,23 +20,302 @@
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-
-
+    <!--    <script type="text/JavaScript" src="./index.js" defer></script>-->
     <script>
-        function sign_out() {
-            $.removeCookie('mytoken', {path: '/'});
-            alert('로그아웃 성공!')
-            window.location.href = "/login"
+        //[jquery] 모든 html 페이지가 화면에 출력되면 ready 속 함수가 실행됩니다.
+        $(document).ready(function () {movie_listing('드라마')})// == $(function (){movie_listing('드라마')})
+
+        //장르별로 영화를 출력하는 기능을 담당합니다.
+        //genre값을 인자로 받아서 서버에게 데이터를 요청합니다
+        function movie_listing(genre){
+            $.ajax({
+                type: "GET",
+                url: `/genre?givegenre=${genre}`,
+                data: {},
+                //성공시 실행되는 함수입니다. response에는 서버에서 return된 값이 들어있습니다.
+                success: function (response) {
+                    //장르 버튼을 누를때마다 다른 장르들의 카드가 쌓이는 것을 방지하기 위해 id값이 card-list인
+                    //태그의 하위 태그들을 지워줍니다.
+                    $("#card-list").empty();
+                    //리스트에 서버에게 받은 json형식의 데이터를 key값을 이용하여 변수 list에 넣어줍니다.
+                    let list = response['movieList']
+                    // list에는 [{id:"myid",img_url:value깂,title:value깂, ''' },
+                    //          {id:value깂,img_url:value깂,title:value깂, ''' },
+                    //          {           '''                 '''           }, ''']
+                    // 과 같은 형식으로 저장되어 있습니다. 위 데이터에서 list[0]['id']의 값은 "myid"가 되겠죠?
+                    // 이러한 방법으로 서버에서 json형식으로 받은 데이터를 처리할 수 있습니다.
+                    for(let i =0 ;i<list.length;i++){
+                        let idVal = list[i]['id']
+                        let img_url = list[i]['img_url']
+                        let title = list[i]['title']
+                        let grade = list[i]['grade']
+                        let genre=''
+                        //장르는 genre:[드라마,SF,어쩌구] 형식으로 되어있기 때문에 for문을 한번 더 돌려줍니다!
+                        for(let t = 0 ; t <list[i]['genre'].length;t++ ){
+                            genre+= list[i]['genre'][t]
+                            if (t!=list[i]['genre'].length-1){
+                                genre+=', '
+                            }
+                        }
+                        //반복해서 붙여줄 html 파일을 만들어줍니다. 지금 저희가 있는 부분은 <script>태그 안이기 때문에 javescript 문법을 써야합니다.
+                        //javascript 속 html 문법은 ``속에 넣어줘야 합니다.
+                        //html 속 javascript 변수는 ${여기에} 적어주시면 됩니다.
+                        let template = `
+                                            <span id = "card" class="card mb-3" style="max-width: 540px;">
+                                              <div class="row g-0">
+                                                <div class="col-md-4">
+                                                  <img src="${img_url}" class="img-fluid rounded-start" alt="영화">
+                                                </div>
+                                                <div class="col-md-8">
+                                                  <div class="card-body">
+                                                    <h5 class="card-title" id="movie-title">영화 제목: ${title}</h5>
+                                                    <p class="card-text" id="movie-grade">영화 평점: ${grade}</p>
+                                                      <p class="card-text" id = "movie-genre">영화 장르: ${genre}</p>
+                                            // <!--          이 버튼을 누르면 영화 상세 페이지로 가야합니다!-->
+                                            // <!--                    <a class="btn btn-primary" onclick="goDetail(${list[i]})" role="button">Link</a> !-->
+                                                        <a class="btn btn-primary" href="/detail/${encodeURI(title)}" role="button">Link</a>
+
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </span>
+`
+                        //id가 card-list인 태그를 찾아서 밑에 tempate을 붙여주세요~~
+                        $('#card-list').append(template)
+                    }
+                }
+            })
+        }
+
+        //switch문을 사용하여 장르버튼의 id를 DB검색에 용이한 텍스트로 변환 후 리턴하는 함수입니다.
+        function pass_genre(genre){
+            let give_genre=''
+            switch (genre){
+                case '1':
+                    give_genre='드라마'
+                    break
+                case '2':
+                    give_genre='판타지'
+                    break
+                case '3':
+                    give_genre='서부'
+                    break
+                case '4':
+                    give_genre='공포'
+                    break
+                case '5':
+                    give_genre='멜로/로맨스'
+                    break
+                case '6':
+                    give_genre='모험'
+                    break
+                case '7':
+                    give_genre='스릴러'
+                    break
+                case '8':
+                    give_genre='느와르'
+                    break
+                case '9':
+                    give_genre='컬트'
+                    break
+                case '10':
+                    give_genre='다큐멘터리'
+                    break
+                case '11':
+                    give_genre='코미디'
+                    break
+                case '12':
+                    give_genre='가족'
+                    break
+                case '13':
+                    give_genre='미스터리'
+                    break
+                case '14':
+                    give_genre='전쟁'
+                    break
+                case '15':
+                    give_genre='애니메이션'
+                    break
+                case '16':
+                    give_genre='뮤지컬'
+                    break
+                case '17':
+                    give_genre='SF'
+                    break
+                case '18':
+                    give_genre='액션'
+                    break
+                case '19':
+                    give_genre='무협'
+                    break
+                case '20':
+                    give_genre='범죄'
+                    break
+                case '21':
+                    give_genre='서스팬스'
+                    break
+                case '22':
+                    give_genre='서사'
+                    break
+                case '23':
+                    give_genre='블랙코미디'
+                    break
+                case '24':
+                    give_genre='실험'
+                    break
+                case '25':
+                    give_genre='공연실황'
+                    break
+            }
+
+            //변환한 장르 텍스트를 movie_listing함수의 인자로 넘겨줍니다.
+            movie_listing(give_genre)
         }
     </script>
+    <style>
+        a:link { color: black; text-decoration: none;}
+        a:visited { color: black; text-decoration: none;}
+        a:hover { color: black; text-decoration: none;}
+        .wrap {
+            text-align: center;
+        }
+        .one {
+            background-color: rgb(252, 233, 232);
+            width: auto;
+            height: 150px;
+        }
+        .two {
+            background-color: aliceblue;
+            width: auto;
+            height: 450px;
+        }
+        .tree {
+            height: 100px;
+            width: auto;
+            border-bottom: solid 3px;
+            border-top: solid 3px;
+        }
+        .btn-light {
+            margin: 0px 35px 0px 35px;
+        }
+        .search {
+            align-content: center;
+            text-align: center;
+        }
+        .search_window{
+            text-align: center;
+            position:relative;
+            width:800px;
+            margin: 0 auto;
+        }
+        .search_btn {
+            position:absolute;
+            top:0;
+            right:0;
+        }
+        .search_btn i {
+            padding:17px 30px;
+        }
+        .new_card {
+            background-color: blue;
+            width: 250px;
+            height: 300px;
+            margin: 20px 10px 20px 10px;
+            display: inline-block;
+        }
+        .card-img-top {
 
+            background-position: center;
+            background-size: cover;
+
+        }
+        .right-box {
+            position: absolute;
+            top: 0;
+            right: 0;
+            /*background-image: url("");*/
+        }
+    </style>
 </head>
 <body>
+<div class="one">
+    <div style="text-align: center; font-size: 35px; "><a href="http://192.168.10.103:5000/"><strong>같이보실?</strong></a><span class='right-box' type="button" onclick="profile()">프로필</span></div>
+    <div class="search_window">
+            <span class="search">
+                <input class="search__input" type="text" placeholder="검색" style="border-radius: 50px; width: 800px; height: 50px">
 
-<h1 style="text-align: center; font-size: 3em; margin: 30px 0px 50px">로그인 성공!!!!!!!!</h1>
-<button type="button" class="btn btn-primary btn-lg" style="display: block; margin: auto" onclick="sign_out()">
-    로그아웃>
+            </span>
+        <span class="search_btn">
+             <i  type="button"  onclick="search_btn()" class="fas fa-search"></i>
+            </span>
+    </div>
+</div>
+<div class="two">
+    <div class="mov" style="margin:10px 30px 10px 30px">
+        <div class="new_card">
+            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
+                 class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">영화제목 movie_title.</p>
+            </div>
+        </div>
+        <div class="new_card">
+            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
+                 class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">영화제목 movie_title.</p>
+            </div>
+        </div>
+        <div class="new_card">
+            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
+                 class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">영화제목 movie_title.</p>
+            </div>
+        </div>
+        <div class="new_card">
+            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
+                 class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">영화제목 movie_title.</p>
+            </div>
+        </div>
+    </div>
 
+</div>
+<div class="tree">
+    <button type="button" id="1"  class="btn btn-light" onclick="pass_genre(this.id)">드라마</button>
+    <button type="button" id="2" class="btn btn-light" onclick="pass_genre(this.id)">판타지</button>
+    <button type="button" id="3" class="btn btn-light" onclick="pass_genre(this.id)">서부</button>
+    <button type="button" id="4" class="btn btn-light" onclick="pass_genre(this.id)">공포</button>
+    <button type="button" id="5" class="btn btn-light" onclick="pass_genre(this.id)">멜로/로맨스</button>
+    <button type="button" id="6" class="btn btn-light" onclick="pass_genre(this.id)">모험</button>
+    <button type="button" id="7" class="btn btn-light" onclick="pass_genre(this.id)">스릴러</button>
+    <button type="button" id="8" class="btn btn-light" onclick="pass_genre(this.id)">느와르</button>
+    <button type="button" id="9" class="btn btn-light" onclick="pass_genre(this.id)">컬트</button>
+    <button type="button" id="10" class="btn btn-light" onclick="pass_genre(this.id)">다큐멘터리</button>
+    <button type="button" id="11" class="btn btn-light" onclick="pass_genre(this.id)">코미디</button>
+    <button type="button" id="12" class="btn btn-light" onclick="pass_genre(this.id)">가족</button>
+    <button type="button" id="13" class="btn btn-light" onclick="pass_genre(this.id)">미스터리</button>
+    <button type="button" id="14" class="btn btn-light" onclick="pass_genre(this.id)">전쟁</button>
+    <button type="button" id="15" class="btn btn-light" onclick="pass_genre(this.id)">애니메이션</button>
+    <button type="button" id="16" class="btn btn-light" onclick="pass_genre(this.id)">뮤지컬</button>
+    <button type="button" id="17" class="btn btn-light" onclick="pass_genre(this.id)">SF</button>
+    <button type="button" id="18" class="btn btn-light" onclick="pass_genre(this.id)">액션</button>
+    <button type="button" id="19" class="btn btn-light" onclick="pass_genre(this.id)">무협</button>
+    <button type="button" id="20" class="btn btn-light" onclick="pass_genre(this.id)">범죄</button>
+    <button type="button" id="21" class="btn btn-light" onclick="pass_genre(this.id)">서스펜스</button>
+    <button type="button" id="22" class="btn btn-light" onclick="pass_genre(this.id)">서사</button>
+    <button type="button" id="23" class="btn btn-light" onclick="pass_genre(this.id)">블랙코미디</button>
+    <button type="button" id="24" class="btn btn-light" onclick="pass_genre(this.id)">실험</button>
+    <button type="button" id="25" class="btn btn-light" onclick="pass_genre(this.id)">공연실황</button>
+
+</div>
+
+<div id= "card-list" class = "card-wrap">
+
+
+</div>
 
 </body>
 </html>
