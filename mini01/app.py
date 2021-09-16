@@ -72,12 +72,14 @@ def sign_up():
     region_receive = request.form['region_give']
     gender_receive = request.form['gender_give']
     doc = {
-        "username": username_receive,
+        "user_id": username_receive,
         "password": password_hash,
         "nickname": nickname_receive,
         "age": age_receive,
         "region": region_receive,
         "gender": gender_receive,
+        "profile_pic": "",
+        "profile_pic_real": "profile_pics/profile_placeholder.png"
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
@@ -111,13 +113,11 @@ def detail(title):
     print(title_info)
     return render_template("detail.html", list=title_info, user_info=user_info)
 
-
 @app.route('/detail', methods=['GET'])
 def view_posting():
     title = request.args.get('title')
     posting_info_list = list(db.posting.find({'title': title}, {'_id': False}))
     return jsonify({'posting_list': posting_info_list})
-
 
 @app.route('/posting', methods=['POST'])
 def posting():
@@ -126,19 +126,11 @@ def posting():
     user_info = db.users.find_one({"username": payload["id"]})
     today = datetime.now()
     current_time = today.strftime('%Y-%m-%d-%H-%M-%S')
-    print(user_info["username"])
-    print(current_time)
-    title_receive = request.form['title_give']
-    date_receive = request.form['date_give']
-    time_receive = request.form['time_give']
-    place_receive = request.form['place_give']
     contents_receive = request.form['contents_give']
+    title_receive = request.form['title_give']
     doc = {
         "title": title_receive,
-        "user_obj_id": user_info["username"],
-        "date": date_receive,
-        "time": time_receive,
-        "place": place_receive,
+        "user_id": user_info["username"],
         "current": current_time,
         "contents": contents_receive,
         "is_open": 'True'
@@ -155,40 +147,34 @@ def get_profile(username):
     print(user_info)
     return render_template("profile.html", user_info=user_info)
 
-#
-# @app.route('/profile', methods=['GET'])
-# def view_posting():
-#     title = request.args.get('title')
-#     posting_info_list = list(db.posting.find({'title': title}, {'_id': False}))
-#     return jsonify({'posting_list': posting_info_list})
+@app.route('/get_post', methods=['GET'])
+def get_post():
+    user_name = request.args.get("user_name")
+    my_post_list = list(db.posting.find({'user_id': user_name}, {'_id': False}))
+    return jsonify({'my_post_list': my_post_list})
 
 
-# @app.route('/update_profile', methods=['POST'])
-# def update_profile():
-#     token_receive = request.cookies.get('mytoken')
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         username = payload["id"]
-#         name_receive = request.form["name_give"]
-#         about_receive = request.form["about_give"]
-#         new_doc = {
-#             "profile_name": name_receive,
-#             "profile_info": about_receive
-#         }
-#         if 'file_give' in request.files:
-#             file = request.files["file_give"]
-#         filename = secure_filename(file.filename)
-#         extension = filename.split(".")[-1]
-#         file_path = f"profile_pics/{username}.{extension}"
-#         file.save("./static/" + file_path)
-#         new_doc["profile_pic"] = filename
-#         new_doc["profile_pic_real"] = file_path
-#         db.users.update_one({'username': payload['id']}, {'$set': new_doc})
-#         return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
-#
-#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-#         return redirect(url_for("home"))
 
+@app.route('/update_profile', methods=['POST'])
+def save_img():
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    username = payload["id"]
+    about_receive = request.form["about_give"]
+
+    new_doc = {
+        "profile_info": about_receive
+    }
+    if 'file_give' in request.files:
+        file = request.files["file_give"]
+    filename = secure_filename(file.filename)
+    extension = filename.split(".")[-1]
+    file_path = f"profile_pics/{username}.{extension}"
+    file.save("./static/" + file_path)
+    new_doc["profile_pic"] = filename
+    new_doc["profile_pic_real"] = file_path
+    db.users.update_one({'username': payload['id']}, {'$set': new_doc})
+    return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

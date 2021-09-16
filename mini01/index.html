@@ -167,9 +167,12 @@
                     give_genre='공연실황'
                     break
             }
-
             //변환한 장르 텍스트를 movie_listing함수의 인자로 넘겨줍니다.
             movie_listing(give_genre)
+        }
+        function go_mine() {
+            location.href = `/profile/${user_name}`
+
         }
     </script>
     <style>
@@ -239,16 +242,25 @@
 </head>
 <body>
 <div class="one">
-    <div style="text-align: center; font-size: 35px; "><a href="http://192.168.10.103:5000/"><strong>같이보실?</strong></a><span class='right-box' type="button" onclick="profile()">프로필</span></div>
-    <div class="search_window">
-            <span class="search">
-                <input class="search__input" type="text" placeholder="검색" style="border-radius: 50px; width: 800px; height: 50px">
-
-            </span>
-        <span class="search_btn">
-             <i  type="button"  onclick="search_btn()" class="fas fa-search"></i>
-            </span>
+    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <p style="font-size: 2em"><a href="http://192.168.0.3:5000/"><strong>같이보실?</strong></a></p>
+    </ul>
+    <!--마이페이지가는 버튼   -->
+    <!--            여기가문제같다******************************************************-->
+    <div class="text-end">
+        <a onclick="go_mine()" class="d-block link-dark text-decoration-none" id="mine"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            <!--            여기가문제같다******************************************************-->
+            <img src="https://image-notepet.akamaized.net/resize/620x-/seimage/20191114%2F6a4c967c5b14197dd5d2c47424ae8e82.jpg"
+                 alt="mdo" width="50" height="50" class="rounded-circle">
+        </a>
     </div>
+    <!--검색창 -->
+    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+    </form>
+
+</div>
 </div>
 <div class="two">
     <div class="mov" style="margin:10px 30px 10px 30px">
