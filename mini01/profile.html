@@ -124,16 +124,15 @@
     </style>
 
     <script>
-
         //값 안넘어옴다
-        let user_name = "{{user_info.username}}"
-        console.log('user_name'+user_name)
-        $(function (){draw_my_posting()})
 
+        let user_name = "{{username|safe}}"
+        console.log(`/get_post?${user_name}`)
+        $(function (){draw_my_posting()})
         function draw_my_posting() {
             $.ajax({
                 type: "GET",
-                url: `/get_post?${user_name}`,
+                url: `/get_post?user_name=${user_name}`,
                 data: {},
                 success: function (response) {
                     let list = response['my_post_list']
@@ -179,6 +178,10 @@
             })
         }
 
+        function delete_my_post(){
+
+        }
+
         function update_profile() {
             let file = $('#input-pic')[0].files[0]
             let about = $("#textarea-about").val()
@@ -212,6 +215,8 @@
 
 
 
+
+
     </script>
 
 </head>
@@ -238,7 +243,7 @@
                     <div class="content">
 
                         <p>
-                            <strong>@{{user_info.username}}</strong>
+                            <strong>@{{username.username}}</strong>
 
                         </p>
                     </div>
@@ -280,7 +285,7 @@
                                                     <span class="file-label">파일 선택</span>
                                                 </span>
                                                 <span id="file-name" class="file-name"
-                                                      style="width:100%;max-width:100%">{{ user_info.profile_pic }}</span>
+                                                      style="width:100%;max-width:100%">{{ username.profile_pic }}</span>
                                             </label>
                                         </div>
 
@@ -292,7 +297,7 @@
                                     <p class="control">
 
                                             <textarea id="textarea-about" class="textarea"
-                                                      placeholder="자기소개하기">{{ user_info.profile_info }}</textarea>
+                                                      placeholder="자기소개하기">{{ username.profile_info }}</textarea>
                                     </p>
                                 </div>
                                 <nav class="level is-mobile">
@@ -313,8 +318,8 @@
                         </article>
                     </div>
                 </div>
-                <button class="modal-close is-large" aria-label="close"
-                        onclick='$("#modal-edit").removeClass("is-active")'></button>
+<!--                <button class="modal-close is-large" aria-label="close"-->
+<!--                        onclick='$("#modal-edit").removeClass("is-active")'></button>-->
             </div>
         </div>
     </section>
@@ -327,42 +332,7 @@
     </section>
 </div>
 <div id="my-post" class="has-navbar-fixed-top">
-<!--    <section class="section" >-->
-<!--        <div id="post-box2" class="container">-->
-<!--            <div class="box">-->
-<!--                <article class="media">-->
-<!--                    <div class="media-left">-->
-<!--                        <a class="image is-64x64" href="#">-->
-<!--                            <img class="is-rounded"-->
-<!--                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSESQia5GVSv7DjHgqoYdAiGltY3WqzI9dCrC_dWY6hd2MCnzZujP_Q9oGk6_dqeDG-2pc&usqp=CAU"-->
-<!--                                 alt="Image">-->
-<!--                        </a>-->
-<!--                    </div>-->
-<!--                    <div class="media-content">-->
-<!--                        <div class="content">-->
-<!--                            <p>-->
-<!--                                <strong>홍길동</strong> <small>@username</small> <small>10분 전</small>-->
-<!--                                <br>-->
-<!--                                글을 적는 칸-->
-<!--                            </p>-->
-<!--                        </div>-->
-<!--                        <nav class="level is-mobile">-->
-<!--                            <div class="level-left">-->
-<!--                                <a class="level-item is-sparta" aria-label="heart"-->
-<!--                                   onclick="toggle_like('', 'heart')">-->
-<!--                                        <span class="icon is-small"><i class="fa fa-heart"-->
-<!--                                                                       aria-hidden="true"></i></span>&nbsp;<span-->
-<!--                                        class="like-num">2.7k</span>-->
-<!--                                </a>-->
-<!--                            </div>-->
 
-<!--                        </nav>-->
-<!--                    </div>-->
-<!--                </article>-->
-<!--            </div>-->
-
-<!--        </div>-->
-<!--    </section>-->
 
 </div>
 </div>

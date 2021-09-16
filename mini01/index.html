@@ -24,7 +24,6 @@
     <script>
         //[jquery] 모든 html 페이지가 화면에 출력되면 ready 속 함수가 실행됩니다.
         $(document).ready(function () {movie_listing('드라마')})// == $(function (){movie_listing('드라마')})
-
         //장르별로 영화를 출력하는 기능을 담당합니다.
         //genre값을 인자로 받아서 서버에게 데이터를 요청합니다
         function movie_listing(genre){
@@ -38,6 +37,20 @@
                     //태그의 하위 태그들을 지워줍니다.
                     $("#card-list").empty();
                     //리스트에 서버에게 받은 json형식의 데이터를 key값을 이용하여 변수 list에 넣어줍니다.
+                    let top_movie = response['topList']
+                    for (let j = 0; j<4;j++){
+                        let top_img_url = top_movie[j]['img_url']
+                        let top_title = top_movie[j]['title']
+                        let temp_html =`<div class="new_card">
+            <img src="${top_img_url}"
+                 class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text">${top_title}</p>
+            </div>
+        </div>`
+                        $('#top-movie-box').append(temp_html)
+                    }
+
                     let list = response['movieList']
                     // list에는 [{id:"myid",img_url:value깂,title:value깂, ''' },
                     //          {id:value깂,img_url:value깂,title:value깂, ''' },
@@ -45,7 +58,6 @@
                     // 과 같은 형식으로 저장되어 있습니다. 위 데이터에서 list[0]['id']의 값은 "myid"가 되겠죠?
                     // 이러한 방법으로 서버에서 json형식으로 받은 데이터를 처리할 수 있습니다.
                     for(let i =0 ;i<list.length;i++){
-                        let idVal = list[i]['id']
                         let img_url = list[i]['img_url']
                         let title = list[i]['title']
                         let grade = list[i]['grade']
@@ -262,35 +274,15 @@
 </div>
 </div>
 <div class="two">
-    <div class="mov" style="margin:10px 30px 10px 30px">
-        <div class="new_card">
-            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
-                 class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-text">영화제목 movie_title.</p>
-            </div>
-        </div>
-        <div class="new_card">
-            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
-                 class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-text">영화제목 movie_title.</p>
-            </div>
-        </div>
-        <div class="new_card">
-            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
-                 class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-text">영화제목 movie_title.</p>
-            </div>
-        </div>
-        <div class="new_card">
-            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"
-                 class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-text">영화제목 movie_title.</p>
-            </div>
-        </div>
+    <div id="top-movie-box" class="mov" style="margin:10px 30px 10px 30px">
+<!--        <div class="new_card">-->
+<!--            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"-->
+<!--                 class="card-img-top" alt="...">-->
+<!--            <div class="card-body">-->
+<!--                <p class="card-text">영화제목 movie_title.</p>-->
+<!--            </div>-->
+<!--        </div>-->
+
     </div>
 
 </div>
