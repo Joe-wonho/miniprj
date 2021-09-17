@@ -38,41 +38,7 @@
     <style>
 
 
-        .one {
-
-            background-color: rgb(252, 233, 232);
-            width: auto;
-            height: 150px;
-        }
-
-
-        .search_window {
-            text-align: center;
-            position: relative;
-            width: 800px;
-            margin: 0 auto;
-        }
-
-        .search_btn {
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-
-        .search_btn i {
-            padding: 17px 30px;
-        }
-
-
-        .right-box {
-            position: absolute;
-            top: 0;
-            right: 0;
-            /*background-image: url("");*/
-        }
-
         body {
-            background-color: RGBA(232, 52, 78, 0.2);
             min-height: 100vh;
         }
 
@@ -115,53 +81,54 @@
             height: 100%;
         }
 
-        .has-navbar-fixed-top {
-            background-color: rgb(252, 233, 232);
+        /*.has-navbar-fixed-top {*/
+        /*    background-color: rgb(252, 233, 232);*/
+        /*}*/
+
+        .wrap {
+            padding: 0% 3% 0% 3%;
         }
-        a:link { color: black; text-decoration: none;}
-        a:visited { color: black; text-decoration: none;}
-        a:hover { color: black; text-decoration: none;}
+
+
     </style>
 
     <script>
-        //값 안넘어옴다
+        // let user_name = "{{username|safe}}"
+        // let user_name2 = "{{user_info.username}}"
+        // console.log(user_name2)
+        // $(function (){draw_my_posting()})
+        $(document).ready(function () {
+            let user_name = "{{username|safe}}"
+            draw_my_posting("{{ user_info.username }}")
+        })
 
-        let user_name = "{{username|safe}}"
-        console.log(`/get_post?${user_name}`)
-        $(function (){draw_my_posting()})
-        function draw_my_posting() {
+        function draw_my_posting(username) {
             $.ajax({
                 type: "GET",
-                url: `/get_post?user_name=${user_name}`,
+                url: `/get_post?username_give=${username}`,
                 data: {},
                 success: function (response) {
                     let list = response['my_post_list']
-                    console.log("list"+list)
+                    console.log(list)
                     for (let i = 0; i < list.length; i++) {
+                        let post = list[i]
+                        let username = list[i]['username']
                         let contents = list[i]['contents']
                         let is_open = list[i]['is_open']
                         let current = list[i]['current']
                         let title = list[i]['title']
                         if (is_open) {
-                            let template = `<section class="section" >
+                            let template = `<section id="${post["_id"]}" class="section" >
         <div id="post-box2" class="container">
             <div class="box">
                 <article class="media">
-                    <div class="media-left">
-                        <a class="image is-64x64" href="#">
-                            <img class="is-rounded"
-                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSESQia5GVSv7DjHgqoYdAiGltY3WqzI9dCrC_dWY6hd2MCnzZujP_Q9oGk6_dqeDG-2pc&usqp=CAU"
-                                 alt="Image">
-                        </a>
-                    </div>
+
                     <div class="media-content">
                         <div class="content">
-                            <p>
-                                <strong>${title}</strong> <small>@${user_name}</small> <small>${current}</small>
-                                <br>
-                                ${contents}
+                            <p><strong>${title}</strong> <small>${username}</small> <small>${current}</small>
+                            <i type="button" onclick="delete_post('${post["_id"]}')" class="far fa-trash-alt" style="float: right"></i><p>
 
-                            </p>
+                            <p>${contents}<p>
                         </div>
 
                     </div>
@@ -174,12 +141,13 @@
                         } else {
                         }
                     }
+                    let temp_html = `<p>
+                                <h3></h3>
+                            <strong>user_name</strong>
+                        </p>`
+                    $('#user_nickname').append(temp_html)
                 }
             })
-        }
-
-        function delete_my_post(){
-
         }
 
         function update_profile() {
@@ -213,9 +181,20 @@
             window.location.href = "/login"
         }
 
+        function delete_post(post_id) {
+            $.ajax({
+                type: "POST",
+                url: "/delete/post",
+                data: {post_id_give: post_id},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        console.log(post_id)
+                        window.location.reload();
+                    }
 
-
-
+                }
+            })
+        }
 
     </script>
 
@@ -223,115 +202,138 @@
 
 
 <body>
-
-<div class="one">
-    <div style="text-align: center; font-size: 35px; "><a href="http://192.168.10.103:5000/"><strong>같이보실?</strong></a></div>
-
-</div>
-<div class="has-navbar-fixed-top">
-    <section class="hero is-white">
-        <div class="hero-body" style="padding-bottom:1rem;margin:auto;min-width: 400px">
-            <article class="media">
-                <figure class="media-left" style="align-self: center">
-                    <a class="image is-32x32" href="/wp/sweeter/user/yubn98">
-                        <img class="is-rounded"
-                             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSESQia5GVSv7DjHgqoYdAiGltY3WqzI9dCrC_dWY6hd2MCnzZujP_Q9oGk6_dqeDG-2pc&usqp=CAU">
-
-                    </a>
-                </figure>
-                <div class="media-content">
-                    <div class="content">
-
-                        <p>
-                            <strong>@{{username.username}}</strong>
-
-                        </p>
-                    </div>
-
-                </div>
-            </article>
-
-            <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
-                <a class="button level-item has-text-centered is-sparta" aria-label="edit"
-                   onclick='$("#modal-edit").addClass("is-active")'>
-                    프로필 수정&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-pencil"
-                                                                           aria-hidden="true"></i></span>
+<header class="p-3 mb-3 border-bottom bg-secondary">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+            </a>
+            <!--제목넣는곳-->
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <p style="font-size: 2em"><a href="/" style="color: black;"><b>같이보실?</b></a></p>
+            </ul>
+            <!--검색창 -->
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            </form>
+            <!--마이페이지가는 버튼   -->
+            <!--            여기가문제같다******************************************************-->
+            <div class="text-end">
+                <a onclick="window.location.reload()" class="d-block link-dark text-decoration-none" id="mine"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <!--            여기가문제같다******************************************************-->
+                    <img src="https://image-notepet.akamaized.net/resize/620x-/seimage/20191114%2F6a4c967c5b14197dd5d2c47424ae8e82.jpg"
+                         alt="mdo" width="50" height="50" class="rounded-circle">
                 </a>
-
-                <a class="button level-item has-text-centered is-sparta is-outlined" aria-label="logout"
-                   onclick="sign_out()">
-                    로그아웃&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-sign-out"
-                                                                         aria-hidden="true"></i></span>
-                </a>
-            </nav>
-
-            <div class="modal" id="modal-edit">
-                <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
-                <div class="modal-content">
-                    <div class="box">
-                        <article class="media">
-                            <div class="media-content">
-
-                                <div class="field">
-                                    <label class="label" for="input-pic">프로필 사진</label>
-
-                                    <div class="control is-expanded">
-                                        <div class="file has-name">
-                                            <label class="file-label" style="width:100%">
-                                                <input id="input-pic" class="file-input" type="file"
-                                                       name="resume">
-                                                <span class="file-cta"><span class="file-icon"><i
-                                                        class="fa fa-upload"></i></span>
-                                                    <span class="file-label">파일 선택</span>
-                                                </span>
-                                                <span id="file-name" class="file-name"
-                                                      style="width:100%;max-width:100%">{{ username.profile_pic }}</span>
-                                            </label>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <label class="label" for="textarea-about">나는 누구?</label>
-
-                                    <p class="control">
-
-                                            <textarea id="textarea-about" class="textarea"
-                                                      placeholder="자기소개하기">{{ username.profile_info }}</textarea>
-                                    </p>
-                                </div>
-                                <nav class="level is-mobile">
-                                    <div class="level-left">
-
-                                    </div>
-                                    <div class="level-right">
-                                        <div class="level-item">
-                                            <a class="button is-sparta" onclick="update_profile()">업데이트</a>
-                                        </div>
-                                        <div class="level-item">
-                                            <a class="button is-sparta is-outlined"
-                                               onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
-                                        </div>
-                                    </div>
-                                </nav>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-<!--                <button class="modal-close is-large" aria-label="close"-->
-<!--                        onclick='$("#modal-edit").removeClass("is-active")'></button>-->
             </div>
         </div>
-    </section>
+    </div>
+</header>
 
 
-    <section class="section">
-        <div id="post-box1" class="container">
+<div class="wrap">
+    <div class="has-navbar-fixed-top">
+        <section class="hero is-white" style="background: #f8f8f8;">
+            <div class="hero-body" style="padding-bottom:1rem;margin:auto;min-width: 400px">
+                <article class="media">
+                    <!--                <figure class="media-left" style="align-self: center">-->
+                    <!--                    <a class="image is-32x32" href="/wp/sweeter/user/yubn98">-->
+                    <!--                        <img class="is-rounded"-->
+                    <!--                             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSESQia5GVSv7DjHgqoYdAiGltY3WqzI9dCrC_dWY6hd2MCnzZujP_Q9oGk6_dqeDG-2pc&usqp=CAU">-->
 
-        </div>
-    </section>
-</div>
-<div id="my-post" class="has-navbar-fixed-top">
+                    <!--                    </a>-->
+                    <!--                </figure>-->
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>이름 : {{user_info.nickname}}</strong>
+
+                            </p>
+                            <p>
+                                <strong>아이디 : {{user_info.username}}</strong>
+
+                            </p>
+                        </div>
+
+                    </div>
+                </article>
+
+                <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
+                    <a class="button level-item has-text-centered is-sparta" aria-label="edit"
+                       onclick='$("#modal-edit").addClass("is-active")'>
+                        프로필 수정&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-pencil"
+                                                                               aria-hidden="true"></i></span>
+                    </a>
+
+                    <a class="button level-item has-text-centered is-sparta is-outlined" aria-label="logout"
+                       onclick="sign_out()">
+                        로그아웃&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-sign-out"
+                                                                             aria-hidden="true"></i></span>
+                    </a>
+                </nav>
+
+                <div class="modal" id="modal-edit">
+                    <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
+                    <div class="modal-content">
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-content">
+
+                                    <div class="field">
+
+                                        <div class="control is-expanded">
+
+
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label class="label" for="textarea-about">나는 누구?</label>
+
+                                        <p class="control">
+
+                                            <textarea id="textarea-about" class="textarea"
+                                                      placeholder="자기소개하기">{{ user_info.profile_info }}</textarea>
+                                        </p>
+                                    </div>
+                                    <nav class="level is-mobile">
+                                        <div class="level-left">
+
+                                        </div>
+                                        <div class="level-right">
+                                            <div class="level-item">
+                                                <a class="button is-sparta" onclick="update_profile()">업데이트</a>
+                                            </div>
+                                            <div class="level-item">
+                                                <a class="button is-sparta is-outlined"
+                                                   onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <button class="modal-close is-large" aria-label="close"
+                            onclick='$("#modal-edit").removeClass("is-active")'></button>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section">
+            <div id="post-box1" class="container">
+
+            </div>
+        </section>
+    </div>
+
+
+    <div id="my-post" class="px-4 py-5 my-5" style="background: #f8f8f8;">
+        <i style="text-align: center" class="fas fa-comments fa-3x"></i>
+        <h5 class="display-5 fw-bold posit-cmt text-center">내가쓴글</h5>
+    </div>
 
 
 </div>
