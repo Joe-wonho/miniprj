@@ -36,7 +36,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <style>
-
+        .content h3:not(:first-child) {
+            margin-top: 0;
+        }
 
         body {
             min-height: 100vh;
@@ -88,7 +90,13 @@
         .wrap {
             padding: 0% 3% 0% 3%;
         }
-
+        .size {
+        font-size: 1.4em;
+        margin-bottom: .6666em;
+}
+        .mar {
+            padding: 30px;
+        }
 
     </style>
 
@@ -118,11 +126,16 @@
                     <div class="media-content">
                         <div class="content">
                             <p>
-                                <strong>${title}</strong> <small>@${user_name}</small> <small>${current}</small>
+                            <span class="size badge bg-light text-dark">${title}</span><small style="margin-top: 5px;margin-left: 3px">@${user_name}</small>
+
                                 <i type="button" onclick="delete_post('${post["_id"]}')" class="far fa-trash-alt" style="float: right"></i><p>
 
                                 ${contents}
-
+                                <br>
+<small class=" mar position-absolute bottom-0 end-0" style="
+    padding-bottom: 10px;
+    padding-top: 0px;
+">2021-09-17-00-13-48</small>
                             </p>
                         </div>
 
@@ -195,22 +208,9 @@
             </a>
             <!--제목넣는곳-->
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <p style="font-size: 2em"><a href="/" style="color: black;"><b>같이보실?</b></a></p>
+                <p style="font-size: 2em"><a href="/" style="color: black;"><strong>같이보실?</strong></a></p>
             </ul>
-            <!--검색창 -->
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-            </form>
-            <!--마이페이지가는 버튼   -->
-            <!--            여기가문제같다******************************************************-->
-            <div class="text-end">
-                <a onclick="window.location.reload()" class="d-block link-dark text-decoration-none" id="mine"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    <!--            여기가문제같다******************************************************-->
-                    <img src="https://image-notepet.akamaized.net/resize/620x-/seimage/20191114%2F6a4c967c5b14197dd5d2c47424ae8e82.jpg"
-                         alt="mdo" width="50" height="50" class="rounded-circle">
-                </a>
-            </div>
+
         </div>
     </div>
 </header>
@@ -221,18 +221,10 @@
         <section class="hero is-white" style="background: #f8f8f8;">
             <div class="hero-body" style="padding-bottom:1rem;margin:auto;min-width: 400px">
                 <article class="media">
-                    <!--                <figure class="media-left" style="align-self: center">-->
-                    <!--                    <a class="image is-32x32" href="/wp/sweeter/user/yubn98">-->
-                    <!--                        <img class="is-rounded"-->
-                    <!--                             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSESQia5GVSv7DjHgqoYdAiGltY3WqzI9dCrC_dWY6hd2MCnzZujP_Q9oGk6_dqeDG-2pc&usqp=CAU">-->
-
-                    <!--                    </a>-->
-                    <!--                </figure>-->
-
                     <div class="media-content">
                         <div class="content">
                             <p>
-                                <strong>{{username.nickname}}님  </strong>@{{username.username}}
+                                <strong>{{username.nickname}}님  </strong><span class="badge rounded-pill bg-secondary">@{{username.username}}</span>
 
                             </p>
 
