@@ -55,6 +55,7 @@
     <script>
 
         let user_name = "{{user_info.username}}"
+        let user_nickname = "{{user_info.nickname}}"
         console.log(user_name)
 
         $(function () {
@@ -81,10 +82,10 @@
                             let template = `
                     <li id="posting" class="list-group-item d-flex justify-content-between align-items-start">
                      <div class="ms-2 me-auto ">
-                      <div style="text-align: left">${usernamedb}</div>
-                      <div>${contents}</div>
+                      <div class="card-title" style="text-align: left">${user_nickname}@${usernamedb}</div>
+                      <div class="card-text">${contents}</div>
                     </div>
-                    <span class="badge bg-primary rounded-pill">${current}</span>
+                    <span class="badge bg-primary rounded-pill ">${current}</span>
                     </li>`
                             $('#posting-box').append(template)
                         } else {
@@ -127,7 +128,7 @@
             </a>
             <!--제목넣는곳-->
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <p style="font-size: 2em"><a href="http://192.168.0.3:5000/"><strong>같이보실?</strong></a></p>
+                <p style="font-size: 2em"><a href="/"><strong>같이보실?</strong></a></p>
             </ul>
             <!--검색창 -->
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
 
     <!-- Webpage Title -->
@@ -26,6 +26,7 @@
         $(document).ready(function () {movie_listing('드라마')})// == $(function (){movie_listing('드라마')})
         //장르별로 영화를 출력하는 기능을 담당합니다.
         //genre값을 인자로 받아서 서버에게 데이터를 요청합니다
+        let user_name = "{{user_info.username|safe}}"
         function movie_listing(genre){
             $.ajax({
                 type: "GET",
@@ -38,16 +39,21 @@
                     $("#card-list").empty();
                     //리스트에 서버에게 받은 json형식의 데이터를 key값을 이용하여 변수 list에 넣어줍니다.
                     let top_movie = response['topList']
+                    $("#top-movie-box").empty();
                     for (let j = 0; j<4;j++){
                         let top_img_url = top_movie[j]['img_url']
                         let top_title = top_movie[j]['title']
-                        let temp_html =`<div class="new_card">
-            <img src="${top_img_url}"
-                 class="card-img-top" alt="...">
-            <div class="card-body">
-                <p class="card-text">${top_title}</p>
-            </div>
-        </div>`
+                        let temp_html =`
+
+                                        <div class="new_card" >
+                                        <a href="/detail/${encodeURI(top_title)}">
+                                            <img src="${top_img_url}"
+                                                 class="card-img-top" alt="...">
+                                            <div class="card-body">
+                                                <p class="card-text">${top_title}</p>
+                                            </div></a>
+                                        </div>`
+
                         $('#top-movie-box').append(temp_html)
                     }
 
@@ -73,23 +79,23 @@
                         //javascript 속 html 문법은 ``속에 넣어줘야 합니다.
                         //html 속 javascript 변수는 ${여기에} 적어주시면 됩니다.
                         let template = `
-                                            <span id = "card" class="card mb-3" style="max-width: 540px;">
-                                              <div class="row g-0">
-                                                <div class="col-md-4">
-                                                  <img src="${img_url}" class="img-fluid rounded-start" alt="영화">
-                                                </div>
-                                                <div class="col-md-8">
-                                                  <div class="card-body">
-                                                    <h5 class="card-title" id="movie-title">영화 제목: ${title}</h5>
-                                                    <p class="card-text" id="movie-grade">영화 평점: ${grade}</p>
-                                                      <p class="card-text" id = "movie-genre">영화 장르: ${genre}</p>
-                                            // <!--          이 버튼을 누르면 영화 상세 페이지로 가야합니다!-->
-                                            // <!--                    <a class="btn btn-primary" onclick="goDetail(${list[i]})" role="button">Link</a> !-->
-                                                        <a class="btn btn-primary" href="/detail/${encodeURI(title)}" role="button">Link</a>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </span>
+                                            <div class="card-two">
+          <div class="card mb-3 card1" style="max-width: 500px; margin-right:90px ">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img src="${img_url}" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                  <h5 class="card-title"><b>${title}</b></h5>
+                <p class="card-text">영화 평점: ${grade}</p>
+                <p class="card-text">영화 장르: ${genre}</p>
+                  <a class="button" href="/detail/${encodeURI(title)}"><b>상세페이지</b></a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
 `
                         //id가 card-list인 태그를 찾아서 밑에 tempate을 붙여주세요~~
                         $('#card-list').append(template)
@@ -190,8 +196,10 @@
         a:link { color: black; text-decoration: none;}
         a:visited { color: black; text-decoration: none;}
         a:hover { color: black; text-decoration: none;}
+        .all
         .wrap {
             text-align: center;
+            margin-left: 50px;
         }
         .one {
             background-color: rgb(252, 233, 232);
@@ -202,12 +210,17 @@
             background-color: aliceblue;
             width: auto;
             height: 450px;
+
+
         }
         .tree {
             height: 100px;
             width: auto;
-            border-bottom: solid 3px;
-            border-top: solid 3px;
+            margin-left: 13px;
+
+        }
+        .mov{
+            text-align:center
         }
         .btn-light {
             margin: 0px 35px 0px 35px;
@@ -234,7 +247,7 @@
             background-color: blue;
             width: 250px;
             height: 300px;
-            margin: 20px 10px 20px 10px;
+            margin: 20px 20px 20px 10px;
             display: inline-block;
         }
         .card-img-top {
@@ -249,76 +262,95 @@
             right: 0;
             /*background-image: url("");*/
         }
+
+        .card-two{
+            float: right;
+
+        }
+        .card-title{
+            font-size: 25px;
+        }
+
+        /*여기서부터 버튼css입니다*/
+        .button {
+            margin-top: 50px;
+            border: none;
+            background-color: rgb(252, 233, 232);
+            color: #fff;
+        }
+
+        .button:hover {
+            background-color:#FFD9E4;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
-<div class="one">
-    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <p style="font-size: 2em"><a href="http://192.168.0.3:5000/"><strong>같이보실?</strong></a></p>
-    </ul>
-    <!--마이페이지가는 버튼   -->
-    <!--            여기가문제같다******************************************************-->
-    <div class="text-end">
-        <a onclick="go_mine()" class="d-block link-dark text-decoration-none" id="mine"
-           data-bs-toggle="dropdown" aria-expanded="false">
-            <!--            여기가문제같다******************************************************-->
-            <img src="https://image-notepet.akamaized.net/resize/620x-/seimage/20191114%2F6a4c967c5b14197dd5d2c47424ae8e82.jpg"
-                 alt="mdo" width="50" height="50" class="rounded-circle">
-        </a>
-    </div>
-    <!--검색창 -->
-    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-    </form>
-
-</div>
-</div>
-<div class="two">
-    <div id="top-movie-box" class="mov" style="margin:10px 30px 10px 30px">
-<!--        <div class="new_card">-->
-<!--            <img src="https://img1.daumcdn.net/thumb/C300x430/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fmovie%2F5a64941e61f5a3fbcad8ef6bbf7edb073b35c01a"-->
-<!--                 class="card-img-top" alt="...">-->
-<!--            <div class="card-body">-->
-<!--                <p class="card-text">영화제목 movie_title.</p>-->
-<!--            </div>-->
-<!--        </div>-->
+<div class="wrap">
+    <div class="one">
+        <div style="display: inline-block;
+            margin-top: 50px;
+             font-size: 35px;
+              margin-left: 50px">
+            <a href="/"><strong>같이보실?</strong></a>
+<!--            <span class='right-box' type="button" onclick="profile()">프로필</span>-->
+            <span class="right-box">
+                <a onclick="go_mine()" class="d-block link-dark text-decoration-none" id="mine"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <!--            여기가문제같다******************************************************-->
+                    <img src="https://image-notepet.akamaized.net/resize/620x-/seimage/20191114%2F6a4c967c5b14197dd5d2c47424ae8e82.jpg"
+                         alt="mdo" width="50" height="50" class="rounded-circle">
+                </a>
+            </span>
+        </div>
 
     </div>
 
-</div>
-<div class="tree">
-    <button type="button" id="1"  class="btn btn-light" onclick="pass_genre(this.id)">드라마</button>
-    <button type="button" id="2" class="btn btn-light" onclick="pass_genre(this.id)">판타지</button>
-    <button type="button" id="3" class="btn btn-light" onclick="pass_genre(this.id)">서부</button>
-    <button type="button" id="4" class="btn btn-light" onclick="pass_genre(this.id)">공포</button>
-    <button type="button" id="5" class="btn btn-light" onclick="pass_genre(this.id)">멜로/로맨스</button>
-    <button type="button" id="6" class="btn btn-light" onclick="pass_genre(this.id)">모험</button>
-    <button type="button" id="7" class="btn btn-light" onclick="pass_genre(this.id)">스릴러</button>
-    <button type="button" id="8" class="btn btn-light" onclick="pass_genre(this.id)">느와르</button>
-    <button type="button" id="9" class="btn btn-light" onclick="pass_genre(this.id)">컬트</button>
-    <button type="button" id="10" class="btn btn-light" onclick="pass_genre(this.id)">다큐멘터리</button>
-    <button type="button" id="11" class="btn btn-light" onclick="pass_genre(this.id)">코미디</button>
-    <button type="button" id="12" class="btn btn-light" onclick="pass_genre(this.id)">가족</button>
-    <button type="button" id="13" class="btn btn-light" onclick="pass_genre(this.id)">미스터리</button>
-    <button type="button" id="14" class="btn btn-light" onclick="pass_genre(this.id)">전쟁</button>
-    <button type="button" id="15" class="btn btn-light" onclick="pass_genre(this.id)">애니메이션</button>
-    <button type="button" id="16" class="btn btn-light" onclick="pass_genre(this.id)">뮤지컬</button>
-    <button type="button" id="17" class="btn btn-light" onclick="pass_genre(this.id)">SF</button>
-    <button type="button" id="18" class="btn btn-light" onclick="pass_genre(this.id)">액션</button>
-    <button type="button" id="19" class="btn btn-light" onclick="pass_genre(this.id)">무협</button>
-    <button type="button" id="20" class="btn btn-light" onclick="pass_genre(this.id)">범죄</button>
-    <button type="button" id="21" class="btn btn-light" onclick="pass_genre(this.id)">서스펜스</button>
-    <button type="button" id="22" class="btn btn-light" onclick="pass_genre(this.id)">서사</button>
-    <button type="button" id="23" class="btn btn-light" onclick="pass_genre(this.id)">블랙코미디</button>
-    <button type="button" id="24" class="btn btn-light" onclick="pass_genre(this.id)">실험</button>
-    <button type="button" id="25" class="btn btn-light" onclick="pass_genre(this.id)">공연실황</button>
 
-</div>
+    <div class="two">
+        <div class="mov" >
+            <div id="top-movie-box" class="mov" style="margin:10px 30px 10px 30px"></div>
+        </div>
+    </div>
+<br>
+    <div class="tree">
+        <button type="button" id="1"  class="btn btn-light" onclick="pass_genre(this.id)">드라마</button>
+        <button type="button" id="2" class="btn btn-light" onclick="pass_genre(this.id)">판타지</button>
+        <button type="button" id="3" class="btn btn-light" onclick="pass_genre(this.id)">서부</button>
+        <button type="button" id="4" class="btn btn-light" onclick="pass_genre(this.id)">공포</button>
+        <button type="button" id="5" class="btn btn-light" onclick="pass_genre(this.id)">멜로/로맨스</button>
+        <button type="button" id="6" class="btn btn-light" onclick="pass_genre(this.id)">모험</button>
+        <button type="button" id="7" class="btn btn-light" onclick="pass_genre(this.id)">스릴러</button>
+        <button type="button" id="8" class="btn btn-light" onclick="pass_genre(this.id)">느와르</button>
+        <br>
+        <button type="button" id="9" class="btn btn-light" onclick="pass_genre(this.id)">컬트</button>
+        <button type="button" id="10" class="btn btn-light" onclick="pass_genre(this.id)">다큐멘터리</button>
+        <button type="button" id="11" class="btn btn-light" onclick="pass_genre(this.id)">코미디</button>
+        <button type="button" id="12" class="btn btn-light" onclick="pass_genre(this.id)">가족</button>
+        <button type="button" id="13" class="btn btn-light" onclick="pass_genre(this.id)">미스터리</button>
+        <button type="button" id="14" class="btn btn-light" onclick="pass_genre(this.id)">전쟁</button>
+        <button type="button" id="15" class="btn btn-light" onclick="pass_genre(this.id)">애니메이션</button>
+        <button type="button" id="16" class="btn btn-light" onclick="pass_genre(this.id)">뮤지컬</button>
+        <br>
+        <button type="button" id="17" class="btn btn-light" onclick="pass_genre(this.id)">SF</button>
+        <button type="button" id="18" class="btn btn-light" onclick="pass_genre(this.id)">액션</button>
+        <button type="button" id="19" class="btn btn-light" onclick="pass_genre(this.id)">무협</button>
+        <button type="button" id="20" class="btn btn-light" onclick="pass_genre(this.id)">범죄</button>
+        <button type="button" id="21" class="btn btn-light" onclick="pass_genre(this.id)">서스펜스</button>
+        <button type="button" id="22" class="btn btn-light" onclick="pass_genre(this.id)">서사</button>
+        <button type="button" id="23" class="btn btn-light" onclick="pass_genre(this.id)">블랙코미디</button>
+        <button type="button" id="24" class="btn btn-light" onclick="pass_genre(this.id)">실험</button>
+        <br>
+        <button type="button" id="25" class="btn btn-light" onclick="pass_genre(this.id)">공연실황</button>
 
-<div id= "card-list" class = "card-wrap">
+    </div>
+    <br>
+    <br>
+    <br>
 
-
+    <div id= "card-list" class = "card-wrap"></div>
 </div>
 
 </body>
+
 </html>

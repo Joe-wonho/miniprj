@@ -93,26 +93,19 @@
     </style>
 
     <script>
-        // let user_name = "{{username|safe}}"
-        // let user_name2 = "{{user_info.username}}"
-        // console.log(user_name2)
-        // $(function (){draw_my_posting()})
-        $(document).ready(function () {
-            let user_name = "{{username|safe}}"
-            draw_my_posting("{{ user_info.username }}")
-        })
+        let user_name = "{{username.username|safe}}"
+        console.log(`/get_post?${user_name}`)
+        $(function (){draw_my_posting()})
 
-        function draw_my_posting(username) {
+        function draw_my_posting() {
             $.ajax({
                 type: "GET",
-                url: `/get_post?username_give=${username}`,
+                url: `/get_post?user_name=${user_name}`,
                 data: {},
                 success: function (response) {
                     let list = response['my_post_list']
-                    console.log(list)
                     for (let i = 0; i < list.length; i++) {
                         let post = list[i]
-                        let username = list[i]['username']
                         let contents = list[i]['contents']
                         let is_open = list[i]['is_open']
                         let current = list[i]['current']
@@ -122,13 +115,15 @@
         <div id="post-box2" class="container">
             <div class="box">
                 <article class="media">
-
                     <div class="media-content">
                         <div class="content">
-                            <p><strong>${title}</strong> <small>${username}</small> <small>${current}</small>
-                            <i type="button" onclick="delete_post('${post["_id"]}')" class="far fa-trash-alt" style="float: right"></i><p>
+                            <p>
+                                <strong>${title}</strong> <small>@${user_name}</small> <small>${current}</small>
+                                <i type="button" onclick="delete_post('${post["_id"]}')" class="far fa-trash-alt" style="float: right"></i><p>
 
-                            <p>${contents}<p>
+                                ${contents}
+
+                            </p>
                         </div>
 
                     </div>
@@ -143,42 +138,12 @@
                     }
                     let temp_html = `<p>
                                 <h3></h3>
-                            <strong>user_name</strong>
+                            <strong>@${user_name}</strong>
                         </p>`
                     $('#user_nickname').append(temp_html)
+
                 }
             })
-        }
-
-        function update_profile() {
-            let file = $('#input-pic')[0].files[0]
-            let about = $("#textarea-about").val()
-            let form_data = new FormData()
-            form_data.append("file_give", file)
-            form_data.append("about_give", about)
-            console.log(name, file, about, form_data)
-
-            $.ajax({
-                type: "POST",
-                url: "/update_profile",
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    if (response["result"] == "success") {
-                        alert(response["msg"])
-                        window.location.reload()
-
-                    }
-                }
-            });
-        }
-
-        function sign_out() {
-            $.removeCookie('mytoken', {path: '/'});
-            alert('로그아웃!')
-            window.location.href = "/login"
         }
 
         function delete_post(post_id) {
@@ -196,11 +161,29 @@
             })
         }
 
+        function update_profile() {
+            let nickname = $('#nickname-text').val()
+            let about = $("#about-text").val()
+
+
+            $.ajax({
+                type: "POST",
+                url: "/update_profile",
+                data: {name: user_name, nickname_give: nickname, about_give: about},
+                success: function (response) {
+                    location.href = `/profile/${user_name}`
+                }
+            })
+
+        }
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/login"
+        }
     </script>
 
 </head>
-
-
 <body>
 <header class="p-3 mb-3 border-bottom bg-secondary">
     <div class="container">
@@ -245,18 +228,21 @@
 
                     <!--                    </a>-->
                     <!--                </figure>-->
+
                     <div class="media-content">
                         <div class="content">
                             <p>
-                                <strong>이름 : {{user_info.nickname}}</strong>
+                                <strong>{{username.nickname}}님  </strong>@{{username.username}}
 
                             </p>
-                            <p>
-                                <strong>아이디 : {{user_info.username}}</strong>
 
-                            </p>
+                            <div class="card-text" style="width: 18rem;">
+                                <p><strong>"</strong> {{username.about}} <strong>"</strong></p>
+
+
+                            </div>
+
                         </div>
-
                     </div>
                 </article>
 
@@ -289,13 +275,27 @@
                                         </div>
                                     </div>
                                     <div class="field">
-                                        <label class="label" for="textarea-about">나는 누구?</label>
+                                        <div>
+                                            <label class="label" for="nickname-text">닉네임 변경</label>
 
-                                        <p class="control">
+                                            <p class="control">
 
-                                            <textarea id="textarea-about" class="textarea"
-                                                      placeholder="자기소개하기">{{ user_info.profile_info }}</textarea>
-                                        </p>
+                                                <input id="nickname-text" class=""
+                                                       placeholder="{{ username.nickname }}" value="{{ username.nickname }}">
+
+                                                </input>
+                                            </p>
+                                        </div>
+                                        <br>
+                                        <div>
+                                            <label class="label" for="about-text">나는 누구?</label>
+
+                                            <p class="control">
+
+                                            <textarea id="about-text" class="textarea"
+                                                      placeholder="소개를 작성해주세요.">{{ username.profile_info }}</textarea>
+                                            </p>
+                                        </div>
                                     </div>
                                     <nav class="level is-mobile">
                                         <div class="level-left">
@@ -329,14 +329,15 @@
         </section>
     </div>
 
-
-    <div id="my-post" class="px-4 py-5 my-5" style="background: #f8f8f8;">
+    <div class ="text-center">
         <i style="text-align: center" class="fas fa-comments fa-3x"></i>
         <h5 class="display-5 fw-bold posit-cmt text-center">내가쓴글</h5>
     </div>
-
+    <div id="my-post" class="px-4 py-5 my-5 " style="background: #f8f8f8;">
+    </div>
 
 </div>
-</div>
+
 </body>
+
 </html>
